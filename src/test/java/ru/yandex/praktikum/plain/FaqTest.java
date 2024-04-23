@@ -1,23 +1,17 @@
-
 package ru.yandex.praktikum.plain;
 
 import org.hamcrest.MatcherAssert;
 import org.junit.*;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import static org.junit.Assert.assertTrue;
 import java.util.List;
 import static org.hamcrest.CoreMatchers.containsString;
-
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import ru.yandex.praktikum.page.MainPage;
 
 @RunWith(Parameterized.class)
-public class FaqTest {
-    private WebDriver webDriver;
+public class FaqTest extends BaseTest {
 
     public static MainPage objMainPage; // Главная страница
     public static List<WebElement> faqElements; // Список вопросов
@@ -30,7 +24,6 @@ public class FaqTest {
         this.questionText = questionText;
         this.checkedText = checkedText;
     }
-
 
     @Parameterized.Parameters(name = "Проверка вопросов и ответов: " +
             "Индекс вопроса: {0}; " +
@@ -61,29 +54,18 @@ public class FaqTest {
         };
     }
 
-    @Before
-    public void setup() {
-        webDriver = new ChromeDriver();
-        // webDriver = new FirefoxDriver();
-        webDriver.get("https://qa-scooter.praktikum-services.ru/");
-
+    @Test
+    public void faqTest() {
         objMainPage = new MainPage(webDriver);
         objMainPage.waitForLoadFaq();
 
         // найдем все вопросы
         faqElements = objMainPage.getFaqItems();
 
-    }
-
-    @Test
-    public void FaqTest() {
-
         WebElement faqElement = faqElements.get(index);
 
         boolean buttonClickable = objMainPage.isButtonClickable(faqElement);
         assertTrue("Элемент "+index+" не кликабелен", buttonClickable);
-
-        if (!buttonClickable) return;
 
         faqElement.click();
 
@@ -92,14 +74,8 @@ public class FaqTest {
         String faqAnswer;
         faqAnswer = objMainPage.getAnswer(faqElement);
 
-
         MatcherAssert.assertThat("Текст вопроса не совпадает: ", faqQuestion, containsString(questionText));
         MatcherAssert.assertThat("Текст ответа не совпадает: ", faqAnswer, containsString(checkedText));
-    }
-
-    @After
-    public void tearDown() {
-        webDriver.quit();
     }
 
 }

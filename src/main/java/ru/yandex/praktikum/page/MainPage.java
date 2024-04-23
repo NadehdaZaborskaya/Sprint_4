@@ -12,6 +12,8 @@ import java.util.List;
 public class MainPage {
 
     private final WebDriver webDriver;
+    //Переменная для ссылки на главную страницу
+    public static final String URL = "https://qa-scooter.praktikum-services.ru/";
 
     //локаторы для создания заказа на главной странице
     private final By imageScooter = By.xpath(".//img[@alt = 'Scooter blueprint']");
@@ -78,7 +80,7 @@ public class MainPage {
 
     // ждем пока прогрузятся вопросы о важном
     public void waitForLoadFaq() {
-        WebElement faqElement =webDriver.findElement(sectionFaq);
+        WebElement faqElement = webDriver.findElement(sectionFaq);
         new WebDriverWait(webDriver, Duration.ofSeconds(3)).until(ExpectedConditions.visibilityOfElementLocated(sectionFaq));
         ((JavascriptExecutor)webDriver).executeScript("arguments[0].scrollIntoView();", faqElement);
 

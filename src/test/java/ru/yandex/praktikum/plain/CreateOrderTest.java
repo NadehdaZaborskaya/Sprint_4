@@ -1,23 +1,16 @@
 package ru.yandex.praktikum.plain;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import ru.yandex.praktikum.page.MainPage;
 import ru.yandex.praktikum.page.OrderPage;
 import static org.junit.Assert.assertTrue;
 
-
 @RunWith(Parameterized.class)
 
-public class CreateOrderTest {
+public class CreateOrderTest extends BaseTest{
 
-    private WebDriver webDriver;
     public MainPage objMainPage;
     public OrderPage objOrderPage;
     private final int indexButton;
@@ -30,7 +23,6 @@ public class CreateOrderTest {
     private final String period;
     private final String color;
     private final String comment;
-
 
     public CreateOrderTest(int indexButton, String name, String surname, String address, String metro, String phone, String dateOrder, String period, String color, String comment) {
         this.indexButton = indexButton;
@@ -63,20 +55,12 @@ public class CreateOrderTest {
         };
     }
 
-    @Before
-    public void setup() {
-        webDriver = new ChromeDriver();
-        //  webDriver = new FirefoxDriver();
-        webDriver.get("https://qa-scooter.praktikum-services.ru/");
-    }
-
     //Проверка сценария создания заказа
     @Test
     public void createOrder() {
         objMainPage = new MainPage(webDriver);
         objMainPage.waitForLoadPage();
         objMainPage.clickGetCookie();
-
         objMainPage.clickOrder(indexButton);
         objOrderPage = new OrderPage(webDriver);
         objOrderPage.waitForLoadOrderPage();
@@ -85,11 +69,6 @@ public class CreateOrderTest {
         objOrderPage.setOtherFieldsAndClickOrder(dateOrder, period, color, comment);
 
         assertTrue("Отсутствует сообщение об успешном завершении заказа", objMainPage.isElementExist(objOrderPage.orderPlaced));
-    }
-
-    @After
-    public void tearDown() {
-        webDriver.quit();
     }
 
 }
